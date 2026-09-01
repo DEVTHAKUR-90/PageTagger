@@ -119,6 +119,7 @@
       this.root = document.createElement("div");
       this.root.id = ROOT_ID;
       this.root.setAttribute("aria-live", "polite");
+      this.root.dataset.theme = this.settings.theme === "night" ? "night" : "paper";
       this.shadow = this.root.attachShadow({ mode: "open" });
       document.body.appendChild(this.root);
       this.renderShell();
@@ -135,10 +136,10 @@
       this.shadow.innerHTML = `
         <style>
           /* Paper Signal: editorial margins, ink-black controls, warm paper surfaces, Signal Saffron active state. */
-          :host { all: initial; }
+          :host { all: initial; --aa-ink:#18201E; --aa-paper:#F6F0E4; --aa-paper-muted:#E9E2D4; --aa-muted:#5D625B; --aa-line:rgba(24,32,30,.2); --aa-shadow:rgba(10,18,16,.22); }
+          :host([data-theme="night"]) { --aa-ink:#F6F0E4; --aa-paper:#18201E; --aa-paper-muted:#252D2B; --aa-muted:#B9C0B9; --aa-line:rgba(246,240,228,.22); --aa-shadow:rgba(0,0,0,.46); }
           *, *::before, *::after { box-sizing: border-box; }
-          .surface { --aa-ink:#18201E; --aa-paper:#F6F0E4; --aa-paper-muted:#E9E2D4; --aa-muted:#5D625B; --aa-line:rgba(24,32,30,.2); --aa-shadow:rgba(10,18,16,.22); position: absolute; inset: 0 auto auto 0; z-index: 2147483646; pointer-events: none; width: 0; height: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--aa-ink); transition: color 180ms ease; }
-          .surface[data-theme="night"] { --aa-ink:#F6F0E4; --aa-paper:#18201E; --aa-paper-muted:#252D2B; --aa-muted:#B9C0B9; --aa-line:rgba(246,240,228,.22); --aa-shadow:rgba(0,0,0,.46); }
+          .surface { position: absolute; inset: 0 auto auto 0; z-index: 2147483646; pointer-events: none; width: 0; height: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--aa-ink); transition: color 180ms ease; }
           .overlay { position: absolute; inset: 0 auto auto 0; overflow: visible; pointer-events: auto; touch-action: none; }
           .overlay.browse { pointer-events: none; }
           .annotation { vector-effect: non-scaling-stroke; cursor: pointer; }
@@ -387,6 +388,7 @@
     toggleTheme() {
       this.settings.theme = this.settings.theme === "night" ? "paper" : "night";
       this.el.surface.dataset.theme = this.settings.theme;
+      this.root.dataset.theme = this.settings.theme;
       this.persistSettings();
       this.renderControls();
       this.toast(this.settings.theme === "night" ? "Night mode is on." : "Paper mode is on.");
@@ -437,6 +439,7 @@
       this.shadow.querySelector("[data-width-value]").textContent = `${this.settings.width}px`;
       this.shadow.querySelector("[data-opacity-value]").textContent = `${Math.round(this.settings.opacity * 100)}%`;
       this.el.surface.dataset.theme = this.settings.theme === "night" ? "night" : "paper";
+      this.root.dataset.theme = this.settings.theme === "night" ? "night" : "paper";
       this.el.themeButton.setAttribute("aria-pressed", String(this.settings.theme === "night"));
       this.el.themeLabel.textContent = this.settings.theme === "night" ? "Night mode on" : "Paper mode on";
       this.el.layers.innerHTML = this.project.layers.map((layer) => `<div class="layer${layer.id === this.activeLayerId ? " is-active" : ""}"><button data-layer="${layer.id}">${layer.name} <span>${layer.annotations.length}</span></button><button class="layer-toggle" data-layer-toggle="${layer.id}">${layer.visible ? "Visible" : "Hidden"}</button></div>`).join("");
