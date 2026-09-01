@@ -1,7 +1,7 @@
-# ANNOTAURA
 <div align="center">
 <pre>
   
+# ANNOTAURA
 ```text
 █████╗ ███╗   ██╗███╗   ██╗ ██████╗ ████████╗ █████╗ ██╗   ██╗██████╗  █████╗
 ██╔══██╗████╗  ██║████╗  ██║██╔═══██╗╚══██╔══╝██╔══██╗██║   ██║██╔══██╗██╔══██╗
@@ -15,6 +15,7 @@
 </pre>
 
 </div>
+
 > **A local-first visual annotation workspace for the open web.**
 
 **Repository:** [github.com/DEVTHAKUR-90/PageTagger](https://github.com/DEVTHAKUR-90/PageTagger)
