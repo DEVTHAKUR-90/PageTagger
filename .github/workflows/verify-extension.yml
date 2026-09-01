@@ -1,0 +1,32 @@
+name: Verify browser extension
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Build and validate packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check extension source
+        run: pnpm extension:check
+      - name: Build browser packages
+        run: pnpm extension:build
+      - name: Verify generated browser packages
+        run: node scripts/verify-extension.mjs

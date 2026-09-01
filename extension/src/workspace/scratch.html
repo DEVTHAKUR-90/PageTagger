@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Annotaura Scratch Sheet</title>
+    <link rel="stylesheet" href="scratch.css" />
+  </head>
+  <body>
+    <header class="scratch-header"><a href="index.html" class="back-link">← Workspace</a><div><p class="eyebrow">Scratch sheet</p><input id="sheet-name" aria-label="Scratch sheet name" value="Untitled scratch sheet" /></div><div class="header-actions"><button id="undo">Undo</button><button id="redo">Redo</button><button id="export" class="accent">Export JSON</button></div></header>
+    <main class="scratch-stage"><aside class="tool-column" aria-label="Scratch sheet tools"><button class="tool is-active" data-tool="select" title="Select (S)">↗<span>Select</span></button><button class="tool" data-tool="pen" title="Pen (P)">✎<span>Pen</span></button><button class="tool" data-tool="highlight" title="Highlight (H)">━<span>Highlight</span></button><button class="tool" data-tool="text" title="Text note (T)">T<span>Text</span></button><button class="tool" data-tool="line" title="Line (L)">╱<span>Line</span></button><button class="tool" data-tool="arrow" title="Arrow (A)">➜<span>Arrow</span></button><button class="tool" data-tool="rect" title="Rectangle (R)">□<span>Rectangle</span></button><button class="tool" data-tool="ellipse" title="Ellipse (O)">○<span>Ellipse</span></button><button class="tool" data-tool="stamp" title="Evidence stamp (E)">#<span>Stamp</span></button><hr/><button id="delete" class="tool danger" title="Delete selected">×<span>Delete</span></button></aside><section class="sheet-wrap"><div class="paper-corners" aria-hidden="true"></div><svg id="board" aria-label="Annotaura scratch canvas" role="application"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#18201E"></path></marker></defs><g id="annotations"></g></svg></section><aside class="inspector" aria-label="Annotation controls"><p class="eyebrow">Margin controls</p><label>Mark color <span id="color-value">#FFB000</span><input id="color" type="color" value="#FFB000" /></label><label>Weight <span id="width-value">4px</span><input id="width" type="range" min="1" max="24" value="4" /></label><label>Opacity <span id="opacity-value">72%</span><input id="opacity" type="range" min="10" max="100" value="72" /></label><div class="swatches" id="swatches"></div><p class="inspector-note">Every mark is stored as editable vector data in this browser. Select a mark to move it.</p></aside></main><div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="scratch.js"></script>
+  </body>
+</html>

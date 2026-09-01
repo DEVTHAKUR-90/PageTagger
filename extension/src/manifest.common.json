@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Annotaura — Web Annotation Workspace",
+  "short_name": "Annotaura",
+  "description": "Mark live webpages, organize page-aware projects, and export evidence locally.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "Toggle Annotaura"
+  },
+  "permissions": ["activeTab", "scripting", "storage", "downloads", "contextMenus"],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "workspace/index.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "toggle-annotaura": {
+      "suggested_key": {
+        "default": "Alt+Shift+A",
+        "mac": "MacCtrl+Shift+A"
+      },
+      "description": "Toggle Annotaura on the current page"
+    }
+  }
+}

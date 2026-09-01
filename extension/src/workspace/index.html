@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Annotaura Workspace</title>
+    <link rel="stylesheet" href="workspace.css" />
+  </head>
+  <body>
+    <div class="page-grain" aria-hidden="true"></div>
+    <header class="topline">
+      <a class="brand" href="#top" aria-label="Annotaura Workspace home"><span class="brand-mark" aria-hidden="true"></span><span>Annotaura</span></a>
+      <p class="topline-note"><span class="status-dot" aria-hidden="true"></span>Local archive — this browser only</p>
+    </header>
+    <main id="top" class="workspace-shell">
+      <aside class="catalog-spine" aria-label="Workspace navigation">
+        <div>
+          <p class="eyebrow">Visual research, retained</p>
+          <h1>Your working margin.</h1>
+          <p class="intro">Annotaura keeps the marks, notes, and evidence you intentionally place on a page. Nothing is uploaded from this workspace.</p>
+        </div>
+        <nav class="workspace-nav" aria-label="Workspace sections">
+          <button class="nav-item is-active" data-view="archive"><span>01</span>Page archive</button>
+          <button class="nav-item" data-view="scratch"><span>02</span>Scratch sheets</button>
+          <button class="nav-item" data-view="privacy"><span>03</span>Privacy & data</button>
+        </nav>
+        <div class="spine-footer"><p>SHORTCUT</p><kbd>Alt</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>A</kbd><small>Toggle the Margin Rail on the active page.</small></div>
+      </aside>
+      <section class="working-sheet">
+        <div class="section-header">
+          <div><p class="eyebrow">Project catalog</p><h2 id="view-title">Page archive</h2></div>
+          <div class="header-actions"><button class="quiet-button" id="export-all">Export archive</button><label class="accent-button" for="import-project">Import project<input id="import-project" type="file" accept="application/json" hidden /></label></div>
+        </div>
+        <section id="archive-view" class="view is-active" aria-labelledby="view-title">
+          <div class="archive-tools"><label class="search-field"><span class="visually-hidden">Search projects</span><input id="project-search" type="search" placeholder="Search title, domain, tag, or note" /></label><div class="archive-summary" id="archive-summary">Loading your local projects…</div></div>
+          <div class="project-grid" id="project-grid" aria-live="polite"></div>
+        </section>
+        <section id="scratch-view" class="view" aria-label="Scratch sheets">
+          <div class="callout-sheet"><p class="eyebrow">No webpage required</p><h3>Use a blank sheet for maps, walkthroughs, and visual thinking.</h3><p>Scratch sheets use the same mark model as page projects and remain in this browser until you export or delete them.</p><button class="accent-button" id="new-scratch">Create scratch sheet</button></div>
+          <div class="project-grid" id="scratch-grid"></div>
+        </section>
+        <section id="privacy-view" class="view" aria-label="Privacy and data controls">
+          <div class="privacy-layout"><article><p class="eyebrow">Local-first by design</p><h3>Annotaura has no account and no remote sync in this release.</h3><p>Projects, settings, and imported files are stored with your extension data. The extension does not send annotation content, browsing history, or personal information to a server.</p></article><article><p class="eyebrow">What a page project contains</p><p>Its source URL and title, project name, optional tags, your vector marks, note text, evidence stamps, and save timestamps. It does not copy the underlying webpage.</p></article><article class="danger-sheet"><p class="eyebrow">Destructive action</p><h3>Erase this browser’s Annotaura data</h3><p>This removes every saved project and local setting from the extension. Export first if you need a backup.</p><button class="danger-button" id="erase-all">Erase local archive</button></article></div>
+        </section>
+      </section>
+    </main>
+    <template id="project-template"><article class="project-card"><div class="project-registration"><span></span><span></span></div><p class="project-domain"></p><h3></h3><p class="project-meta"></p><div class="project-tags"></div><div class="project-stats"></div><div class="project-actions"><button data-project-action="open">Open source</button><button data-project-action="export">Export</button><button class="delete" data-project-action="delete">Delete</button></div></article></template>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="workspace.js"></script>
+  </body>
+</html>

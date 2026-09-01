@@ -1,0 +1,22 @@
+{
+  "name": "pagetagger",
+  "version": "1.0.0",
+  "description": "Mark live webpages, organize page-aware projects, and export evidence locally.",
+  "type": "module",
+  "license": "MIT",
+  "author": "DEV THAKUR",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEVTHAKUR-90/PageTagger.git"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "extension:check": "node --check extension/src/background/service-worker.js && node --check extension/src/content/annotaura-content.js && node --check extension/src/workspace/workspace.js && node --check extension/src/workspace/scratch.js",
+    "extension:build": "pnpm extension:check && node scripts/build-extension.mjs",
+    "extension:verify": "pnpm extension:build && node scripts/verify-extension.mjs",
+    "extension:package": "pnpm extension:verify && cd extension/dist/chromium && zip -qr ../annotaura-chromium.zip . && cd ../firefox && zip -qr ../annotaura-firefox.zip ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
