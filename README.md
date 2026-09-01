@@ -1,7 +1,5 @@
 <div align="center">
-<pre>
-  
-# ANNOTAURA
+
 ```text
 █████╗ ███╗   ██╗███╗   ██╗ ██████╗ ████████╗ █████╗ ██╗   ██╗██████╗  █████╗
 ██╔══██╗████╗  ██║████╗  ██║██╔═══██╗╚══██╔══╝██╔══██╗██║   ██║██╔══██╗██╔══██╗
@@ -12,17 +10,33 @@
 
                          MARK THE EVIDENCE. KEEP THE CONTEXT.
 ```
-</pre>
+
+**A local-first visual annotation workspace for the open web.**
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Repo](https://img.shields.io/badge/GitHub-PageTagger-181717?style=flat-square&logo=github)](https://github.com/DEVTHAKUR-90/PageTagger)
 
 </div>
-
-> **A local-first visual annotation workspace for the open web.**
-
-**Repository:** [github.com/DEVTHAKUR-90/PageTagger](https://github.com/DEVTHAKUR-90/PageTagger)
 
 Annotaura adds an edge-mounted **Margin Rail** to ordinary web pages. Mark passages, draw evidence, add notes, build page-aware projects, and return to reading without covering the page with a conventional dashboard.
 
 This is an original project with its own name, visual language, implementation, and product direction. It is inspired by the general web-annotation category, not copied from another extension.
+
+## Contents
+
+- [What it includes](#what-it-includes)
+- [Privacy by design](#privacy-by-design)
+- [Quick start](#quick-start)
+- [Install for testing](#install-for-testing)
+- [User workflow](#user-workflow)
+- [Key commands](#key-commands)
+- [Repository structure](#repository-structure)
+- [Public distribution](#public-distribution)
+- [Development and contribution](#development-and-contribution)
+- [Publishing a release](#publishing-a-release)
+- [Clean-session and alignment contract](#clean-session-and-alignment-contract)
+- [License](#license)
+- [Contact](#contact)
 
 ## What it includes
 
@@ -55,7 +69,7 @@ pnpm extension:build
 pnpm extension:package
 ```
 
-The build creates these installable folders and release archives. The source packages use the clean-session lifecycle described above; explicit saved projects remain available in browser storage and Workspace, while ordinary exit does not write the current unsaved canvas.
+The build creates these installable folders and release archives. The source packages use the clean-session lifecycle described later in this document; explicit saved projects remain available in browser storage and Workspace, while ordinary exit does not write the current unsaved canvas.
 
 ```text
 extension/dist/chromium/              # Chrome, Edge, Brave, Opera
@@ -70,7 +84,7 @@ extension/dist/annotaura-firefox.zip
 
 1. Clone or download this repository.
 2. Run `pnpm install` and `pnpm extension:build`.
-3. Open the browser’s extensions page: `chrome://extensions`, `edge://extensions`, or the equivalent page.
+3. Open the browser's extensions page: `chrome://extensions`, `edge://extensions`, or the equivalent page.
 4. Enable **Developer mode**.
 5. Choose **Load unpacked**.
 6. Select `extension/dist/chromium`.
@@ -116,46 +130,18 @@ Press `?` while Annotaura is active to open the shortcut reference. Press `Esc` 
 extension/
 ├── src/
 │   ├── background/          # MV3 service worker and browser coordination
-│   ├── content/             # Shadow-DOM Margin Rail and SVG annotation surface
-│   ├── workspace/           # Local archive and Scratch Sheet pages
-│   ├── shared/              # Defaults and project helpers
-│   ├── assets/              # Original Annotaura icons
-│   └── manifest.*.json      # Shared, Chromium, and Firefox metadata
-└── dist/                    # Generated browser packages (built, not committed)
+│   ├── content/              # Shadow-DOM Margin Rail and SVG annotation surface
+│   ├── workspace/            # Local archive and Scratch Sheet pages
+│   ├── shared/                # Defaults and project helpers
+│   ├── assets/                # Original Annotaura icons
+│   └── manifest.*.json       # Shared, Chromium, and Firefox metadata
+└── dist/                     # Generated browser packages (built, not committed)
 
-scripts/build-extension.mjs  # Cross-browser build
-scripts/verify-extension.mjs # Package verification
+scripts/build-extension.mjs   # Cross-browser build
+scripts/verify-extension.mjs  # Package verification
 ```
 
 This repository contains only the browser extension — there is no companion server, database, or hosted landing page. The extension has zero runtime dependencies; the only dev dependency is Prettier for formatting.
-
-## GitHub workflow
-
-Create a repository on GitHub, then push the source from your local machine:
-
-```bash
-git init
-git add .
-git commit -m "Initial Annotaura release"
-git branch -M main
-git remote add origin https://github.com/DEVTHAKUR-90/PageTagger.git
-git push -u origin main
-```
-
-For a release, build the packages, create a GitHub Release, and attach `extension/dist/annotaura-chromium.zip` and `extension/dist/annotaura-firefox.zip`. Keep the repository source available so contributors can audit and build it themselves. The generated `extension/dist/` folders are installable artifacts; `extension/src/` is the source of truth.
-
-For a cleaner release, use a tag:
-
-```bash
-git tag -a v1.0.0 -m "Annotaura 1.0.0"
-git push origin v1.0.0
-```
-
-## About Vercel and one-click installation
-
-Vercel hosts web apps — it cannot install a browser extension into a visitor's browser, and it does not replace the Chrome Web Store, Edge Add-ons, or Firefox Add-ons. Do not point an "Install" button at a ZIP hosted anywhere, including Vercel; loading a ZIP still requires Developer mode and manual "Load unpacked" steps. For genuine one-click installation, submit the package to the relevant browser store and link to the official listing once it's approved.
-
-If you later want a marketing or documentation site for Annotaura, you can build a separate static site and deploy it to Vercel independently — it isn't required to publish or use the extension itself.
 
 ## Public distribution
 
@@ -172,9 +158,40 @@ Run `pnpm extension:check` for JavaScript syntax validation, `pnpm extension:bui
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`PRODUCT_SPEC.md`](PRODUCT_SPEC.md), and [`ideas.md`](ideas.md) for project context.
 
----
+## Publishing a release
 
-## 📬 Contact
+### Official publishing references
+
+- [Chrome Web Store publishing](https://developer.chrome.com/docs/webstore/publish)
+- [Microsoft Edge Add-ons publishing](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
+- [Firefox Add-ons publishing](https://extensionworkshop.com/documentation/publish/)
+
+### Prerequisites
+
+Before publishing, create the required developer accounts: a Chrome Web Store developer account for Chrome, Edge Add-ons Partner Center access for Edge, and a Firefox Add-ons/AMO account for Firefox. Store review may also require a verified email, developer identity or payment verification, privacy disclosures, screenshots, an icon set, a support URL, and a public privacy-policy URL. Annotaura itself does not require an API key because annotation data is local-first.
+
+### Future updates
+
+For each future release, update the extension version in both generated manifest targets through `extension/src/manifest.chromium.json` and `extension/src/manifest.firefox.json`, update the release notes, run `pnpm extension:check`, `pnpm extension:build`, and `pnpm extension:package`, then inspect the generated ZIPs. Commit the source and tag the release, for example:
+
+```bash
+git add .
+git commit -m "Release v1.1.0"
+git tag -a v1.1.0 -m "Annotaura 1.1.0"
+git push origin main --follow-tags
+```
+
+Upload `extension/dist/annotaura-chromium.zip` to the Chrome Web Store and Edge Add-ons portals, and upload `extension/dist/annotaura-firefox.zip` to Firefox Add-ons. Complete each portal's listing, privacy, permission, support, and review forms. After approval, link to the official store listings from this README and your GitHub Release notes. Existing users receive store-managed updates when the store accepts a higher version; GitHub/manual users must download the new ZIP and reload or reinstall it.
+
+## Clean-session and alignment contract
+
+Annotaura deliberately separates temporary work from explicit saves. Pressing `Esc` exits and removes the active surface without persisting the current canvas. Re-activation starts blank. **Save local**, JSON export, and Workspace actions are explicit persistence paths. Annotation geometry is recorded in page document coordinates, and the SVG surface refreshes its dimensions on scroll, browser resize, visual-viewport resize, and document resize so marks stay attached to the corresponding page content during ordinary browsing.
+
+## License
+
+Annotaura is licensed under the [MIT License](LICENSE).
+
+## Contact
 
 <div align="center">
 
@@ -182,18 +199,6 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`PRODUCT_SPEC.md`](PRODUCT_SPEC.md), 
 [![LinkedIn](https://img.shields.io/badge/💼_LinkedIn-dev--thakur90-0A66C2?style=for-the-badge)](https://www.linkedin.com/in/dev-thakur90)
 [![GitHub](https://img.shields.io/badge/🐙_GitHub-DEVTHAKUR--90-181717?style=for-the-badge)](https://github.com/DEVTHAKUR-90)
 [![Portfolio](https://img.shields.io/badge/🌐_Portfolio-devthakur.vercel.app-7C3AED?style=for-the-badge)](https://devthakur.vercel.app)
-
-</div>
-
----
-
-## 📄 License
-
-Annotaura is licensed under the [MIT License](LICENSE).
-
----
-
-<div align="center">
 
 <br>
 
@@ -208,29 +213,3 @@ Annotaura is licensed under the [MIT License](LICENSE).
 <sub>© 2026 Dev Thakur. All rights reserved.</sub>
 
 </div>
-
-## Official publishing references
-
-- [Chrome Web Store publishing](https://developer.chrome.com/docs/webstore/publish)
-- [Microsoft Edge Add-ons publishing](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
-- [Firefox Add-ons publishing](https://extensionworkshop.com/documentation/publish/)
-
-
-## Release prerequisites and future updates
-
-Before publishing, create the required developer accounts: a Chrome Web Store developer account for Chrome, Edge Add-ons Partner Center access for Edge, and a Firefox Add-ons/AMO account for Firefox. Store review may also require a verified email, developer identity or payment verification, privacy disclosures, screenshots, an icon set, a support URL, and a public privacy-policy URL. Annotaura itself does not require an API key because annotation data is local-first.
-
-For each future release, update the extension version in both generated manifest targets through `extension/src/manifest.chromium.json` and `extension/src/manifest.firefox.json`, update the release notes, run `pnpm check`, `pnpm build`, and `pnpm extension:package`, then inspect the generated ZIPs. Commit the source and tag the release, for example:
-
-```bash
-git add .
-git commit -m "Release v1.1.0"
-git tag -a v1.1.0 -m "Annotaura 1.1.0"
-git push origin main --follow-tags
-```
-
-Upload `extension/dist/annotaura-chromium.zip` to the Chrome Web Store and Edge Add-ons portals, and upload `extension/dist/annotaura-firefox.zip` to Firefox Add-ons. Complete each portal's listing, privacy, permission, support, and review forms. After approval, link to the official store listings from this README and your GitHub Release notes. Existing users receive store-managed updates when the store accepts a higher version; GitHub/manual users must download the new ZIP and reload or reinstall it.
-
-## Clean-session and alignment contract
-
-Annotaura deliberately separates temporary work from explicit saves. Pressing `Esc` exits and removes the active surface without persisting the current canvas. Re-activation starts blank. **Save local**, JSON export, and Workspace actions are explicit persistence paths. Annotation geometry is recorded in page document coordinates, and the SVG surface refreshes its dimensions on scroll, browser resize, visual-viewport resize, and document resize so marks stay attached to the corresponding page content during ordinary browsing.
