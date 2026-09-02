@@ -155,8 +155,7 @@
           .overlay { position: absolute; inset: 0 auto auto 0; overflow: visible; pointer-events: auto; touch-action: none; }
           .overlay.browse { pointer-events: none; }
           .annotation { vector-effect: non-scaling-stroke; cursor: pointer; }
-          .annotation[data-selected="true"] { filter: drop-shadow(0 0 1px #FFB000); }
-          .annotation[data-selected="true"] + .selection-outline { display: block; }
+          .annotation[data-selected="true"] { filter: drop-shadow(0 0 2px #FFB000) drop-shadow(0 0 6px #FFB000); }
           .rail { position: fixed; z-index: 2147483647; top: 50%; ${side}: 16px; transform: translateY(-50%); width: 52px; background: color-mix(in srgb, var(--aa-paper) 98%, transparent); border: 1px solid var(--aa-line); box-shadow: 0 18px 44px var(--aa-shadow); pointer-events: auto; transition: width 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms cubic-bezier(.23,1,.32,1), background 180ms ease, border-color 180ms ease; overflow: hidden; }
           .rail:hover, .rail.is-expanded { width: 188px; box-shadow: 0 22px 55px var(--aa-shadow); }
           .rail::before { content: ""; display: block; height: 5px; background: #FFB000; }
@@ -179,8 +178,15 @@
           .rail-footer button, .actions button { appearance: none; border: 1px solid var(--aa-line); background: var(--aa-paper); min-height: 28px; color: var(--aa-ink); cursor: pointer; font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; transition: background 120ms ease, transform 120ms ease, color 180ms ease, border-color 180ms ease; }
           .rail-footer button:hover, .actions button:hover { background: #FFB000; }
           .rail-footer button:active, .actions button:active { transform: scale(.97); }.rail-footer button:disabled { cursor:not-allowed; opacity:.35; }.rail-footer button:disabled:hover { background:var(--aa-paper); }
-          .context { position: fixed; z-index: 2147483647; ${side}: 68px; top: 16px; width: 238px; max-height:calc(100vh - 32px); overflow:auto; padding: 14px; background: color-mix(in srgb, var(--aa-paper) 98%, transparent); border: 1px solid var(--aa-line); box-shadow: 0 16px 34px var(--aa-shadow); pointer-events: none; opacity: 0; transform:translateX(${side === "right" ? "10px" : "-10px"}) translateY(-2px) scale(.98); transform-origin:top ${side}; visibility: hidden; transition: opacity 180ms cubic-bezier(.23,1,.32,1), transform 220ms cubic-bezier(.23,1,.32,1), visibility 0s linear 220ms, background 180ms ease, border-color 180ms ease; }
+          .context { position: fixed; z-index: 2147483647; ${side}: 68px; top: 16px; width: 238px; min-width:200px; min-height:160px; max-width:min(92vw,480px); max-height:calc(100vh - 32px); overflow:auto; padding: 14px; background: color-mix(in srgb, var(--aa-paper) 98%, transparent); border: 1px solid var(--aa-line); box-shadow: 0 16px 34px var(--aa-shadow); pointer-events: none; opacity: 0; transform:translateX(${side === "right" ? "10px" : "-10px"}) translateY(-2px) scale(.98); transform-origin:top ${side}; visibility: hidden; transition: opacity 180ms cubic-bezier(.23,1,.32,1), transform 220ms cubic-bezier(.23,1,.32,1), visibility 0s linear 220ms, background 180ms ease, border-color 180ms ease; }
           .context.is-open { pointer-events:auto; opacity: 1; transform:translateX(0) translateY(0) scale(1); visibility: visible; transition-delay:0s; }
+          .context.is-dragging, .context.is-resizing { transition: none; user-select: none; }
+          .context-drag { display:flex; align-items:center; gap:8px; margin:-14px -14px 10px; padding:9px 14px; cursor:grab; border-bottom:1px solid var(--aa-line); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--aa-muted); touch-action:none; }
+          .context-drag:active { cursor:grabbing; }
+          .context-drag span:first-child { letter-spacing:.18em; }
+          .context-resize { position:absolute; right:2px; bottom:2px; width:16px; height:16px; cursor:nwse-resize; touch-action:none; opacity:.5; }
+          .context-resize::after { content:""; position:absolute; right:3px; bottom:3px; width:8px; height:8px; border-right:2px solid var(--aa-muted); border-bottom:2px solid var(--aa-muted); }
+          .context-resize:hover { opacity:1; }
           .context h2 { margin: 0 0 10px; color: var(--aa-ink); font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; transition: color 180ms ease; }
           .context-row { display: flex; align-items: center; gap: 7px; margin: 8px 0; }
           .context label { color: var(--aa-muted); font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; transition: color 180ms ease; }
@@ -206,7 +212,7 @@
           .actions.is-visible { pointer-events:auto; opacity:1; visibility:visible; transform:translateX(-50%) translateY(0) scale(1); transition-delay:0s; }
           .actions button { background: transparent; border-color: color-mix(in srgb, var(--aa-paper) 40%, transparent); color: var(--aa-paper); padding: 0 8px; }.actions button:hover { color: #18201E; }
           .text-editor { position: fixed; z-index: 2147483647; width: 230px; display: none; background: var(--aa-paper); border: 1px solid var(--aa-ink); box-shadow: 0 16px 34px var(--aa-shadow); pointer-events: auto; }.text-editor.is-open { display: block; }
-          .text-editor textarea { display: block; width: 100%; min-height: 72px; resize: both; border: 0; outline: none; background: transparent; color: var(--aa-ink); padding: 10px; font: 13px/1.4 ui-sans-serif, system-ui, sans-serif; }.text-editor textarea::placeholder { color:var(--aa-muted); }
+          .text-editor textarea { display: block; width: 100%; min-height: 72px; resize: vertical; border: 0; outline: none; background: transparent; color: var(--aa-ink); padding: 10px; font: 13px/1.4 ui-sans-serif, system-ui, sans-serif; }.text-editor textarea::placeholder { color:var(--aa-muted); }
           .text-editor footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-top: 1px solid var(--aa-line); color: var(--aa-muted); font: 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }.text-editor button { appearance: none; border: 0; background: #FFB000; color: #18201E; padding: 5px 8px; cursor: pointer; font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
           .toast { position: fixed; z-index: 2147483647; bottom: 20px; ${side}: 18px; max-width: 285px; padding: 10px 12px; color: var(--aa-paper); background: var(--aa-ink); box-shadow: 0 16px 34px var(--aa-shadow); pointer-events: none; font: 11px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; opacity: 0; transform: translateY(6px); transition: opacity 160ms ease, transform 160ms ease, background 180ms ease, color 180ms ease; }
           .toast.is-visible { opacity: 1; transform: translateY(0); }
@@ -215,20 +221,85 @@
         </style>
         <div class="surface" data-theme="${this.settings.theme === "night" ? "night" : "paper"}"><svg class="overlay" aria-label="Annotaura annotation layer" role="application"><defs><marker id="annotaura-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--aa-ink)"></path></marker></defs><g class="annotation-layer"></g></svg></div>
         <aside class="rail" aria-label="Annotaura tools"><div class="rail-head"><span class="mark" aria-hidden="true"></span><span><strong class="brand">Annotaura</strong><span class="source">${escapeXml(location.hostname || "Local page")}</span></span></div><div class="tool-list">${tools}</div><div class="rail-footer"><button data-action="undo" aria-label="Undo last annotation change" disabled>Undo</button><button data-action="redo" aria-label="Redo annotation change" disabled>Redo</button><button data-action="menu" aria-label="Open settings and layers" aria-expanded="false">Menu</button></div></aside>
-        <section class="context" aria-label="Annotaura settings"><div class="menu-section"><h2>Appearance</h2><button class="theme-toggle" data-action="theme" aria-pressed="${this.settings.theme === "night"}"><span data-theme-label>${this.settings.theme === "night" ? "Night mode on" : "Paper mode on"}</span> <span aria-hidden="true">◐</span></button></div><div class="menu-section"><h2 style="margin-top:16px">Margin controls</h2><div class="context-row"><label for="aa-width">Weight</label><input id="aa-width" type="range" min="1" max="24" value="${this.settings.width}"><output class="range-value" data-width-value>${this.settings.width}px</output></div><div class="context-row"><label for="aa-opacity">Opacity</label><input id="aa-opacity" type="range" min="10" max="100" value="${Math.round(this.settings.opacity * 100)}"><output class="range-value" data-opacity-value>${Math.round(this.settings.opacity * 100)}%</output></div><div class="color-picker-row"><label for="aa-color">Custom color</label><input id="aa-color" class="color-picker" type="color" value="${this.settings.color}" aria-label="Choose annotation color"></div><div class="swatches">${PALETTE.map((color) => `<button class="swatch${color === this.settings.color ? " is-active" : ""}" data-color="${color}" style="background:${color}" aria-label="Use ${color}"></button>`).join("")}</div><button class="shortcut-toggle" data-action="shortcuts" aria-expanded="false" aria-controls="annotaura-shortcuts"><span>Keyboard shortcuts</span><b aria-hidden="true">+</b></button><div id="annotaura-shortcuts" class="shortcut-panel" aria-hidden="true"><div class="shortcut-group"><h3>Tools</h3><div class="shortcut-row"><span>Select · Pen</span><kbd>S</kbd><kbd>P</kbd></div><div class="shortcut-row"><span>Highlight · Note</span><kbd>H</kbd><kbd>T</kbd></div><div class="shortcut-row"><span>Line · Arrow</span><kbd>L</kbd><kbd>A</kbd></div><div class="shortcut-row"><span>Rect · Ellipse</span><kbd>R</kbd><kbd>O</kbd></div><div class="shortcut-row"><span>Stamp · Browse</span><kbd>E</kbd><kbd>B</kbd></div></div><div class="shortcut-group"><h3>Actions</h3><div class="shortcut-row"><span>Undo</span><kbd>⌘/Ctrl Z</kbd></div><div class="shortcut-row"><span>Redo</span><kbd>⌘/Ctrl ⇧Z</kbd></div><div class="shortcut-row"><span>Delete mark</span><kbd>Del</kbd></div><div class="shortcut-row"><span>Cancel / done</span><kbd>Esc</kbd></div><div class="shortcut-row"><span>Toggle Annotaura</span><kbd>Alt ⇧A</kbd></div></div></div></div><div class="menu-section"><h2 style="margin-top:16px">Working template</h2><div class="context-row"><button data-template="Research" style="flex:1">Research</button><button data-template="Review" style="flex:1">Review</button><button data-template="Teaching" style="flex:1">Teaching</button></div><h2 style="margin-top:16px">Layers</h2><div class="layers"></div></div><div class="menu-section"><h2 style="margin-top:16px">Archive</h2><div class="context-row"><button data-action="save" style="flex:1">Save local</button><button data-action="workspace" style="flex:1">Workspace</button></div><div class="context-row"><button data-action="export-json" style="flex:1">Export JSON</button><button data-action="capture" style="flex:1">Capture view</button></div><div class="context-row"><button data-action="clear-layer" style="flex:1">Clear layer</button><button data-action="close" style="flex:1">Close</button></div></div></section>
+        <section class="context" aria-label="Annotaura settings"><div class="context-drag" data-drag-handle><span aria-hidden="true">⠿⠿</span><span>Drag to move</span></div><div class="menu-section"><h2>Appearance</h2><button class="theme-toggle" data-action="theme" aria-pressed="${this.settings.theme === "night"}"><span data-theme-label>${this.settings.theme === "night" ? "Night mode on" : "Paper mode on"}</span> <span aria-hidden="true">◐</span></button></div><div class="menu-section"><h2 style="margin-top:16px">Margin controls</h2><div class="context-row"><label for="aa-width">Weight</label><input id="aa-width" type="range" min="1" max="24" value="${this.settings.width}"><output class="range-value" data-width-value>${this.settings.width}px</output></div><div class="context-row"><label for="aa-opacity">Opacity</label><input id="aa-opacity" type="range" min="10" max="100" value="${Math.round(this.settings.opacity * 100)}"><output class="range-value" data-opacity-value>${Math.round(this.settings.opacity * 100)}%</output></div><div class="color-picker-row"><label for="aa-color">Custom color</label><input id="aa-color" class="color-picker" type="color" value="${this.settings.color}" aria-label="Choose annotation color"></div><div class="swatches">${PALETTE.map((color) => `<button class="swatch${color === this.settings.color ? " is-active" : ""}" data-color="${color}" style="background:${color}" aria-label="Use ${color}"></button>`).join("")}</div><button class="shortcut-toggle" data-action="shortcuts" aria-expanded="false" aria-controls="annotaura-shortcuts"><span>Keyboard shortcuts</span><b aria-hidden="true">+</b></button><div id="annotaura-shortcuts" class="shortcut-panel" aria-hidden="true"><div class="shortcut-group"><h3>Tools</h3><div class="shortcut-row"><span>Select · Pen</span><kbd>S</kbd><kbd>P</kbd></div><div class="shortcut-row"><span>Highlight · Note</span><kbd>H</kbd><kbd>T</kbd></div><div class="shortcut-row"><span>Line · Arrow</span><kbd>L</kbd><kbd>A</kbd></div><div class="shortcut-row"><span>Rect · Ellipse</span><kbd>R</kbd><kbd>O</kbd></div><div class="shortcut-row"><span>Stamp · Browse</span><kbd>E</kbd><kbd>B</kbd></div></div><div class="shortcut-group"><h3>Actions</h3><div class="shortcut-row"><span>Undo</span><kbd>⌘/Ctrl Z</kbd></div><div class="shortcut-row"><span>Redo</span><kbd>⌘/Ctrl ⇧Z</kbd></div><div class="shortcut-row"><span>Delete mark</span><kbd>Del</kbd></div><div class="shortcut-row"><span>Cancel / done</span><kbd>Esc</kbd></div><div class="shortcut-row"><span>Toggle Annotaura</span><kbd>Alt ⇧A</kbd></div></div></div></div><div class="menu-section"><h2 style="margin-top:16px">Working template</h2><div class="context-row"><button data-template="Research" style="flex:1">Research</button><button data-template="Review" style="flex:1">Review</button><button data-template="Teaching" style="flex:1">Teaching</button></div><h2 style="margin-top:16px">Layers</h2><div class="layers"></div></div><div class="menu-section"><h2 style="margin-top:16px">Archive</h2><div class="context-row"><button data-action="save" style="flex:1">Save local</button><button data-action="workspace" style="flex:1">Workspace</button></div><div class="context-row"><button data-action="export-json" style="flex:1">Export JSON</button><button data-action="capture" style="flex:1">Capture view</button></div><div class="context-row"><button data-action="clear-layer" style="flex:1">Clear layer</button><button data-action="close" style="flex:1">Close</button></div></div><div class="context-resize" data-resize-handle aria-hidden="true"></div></section>
         <div class="actions" aria-label="Selection actions"><button data-action="duplicate">Duplicate</button><button data-action="delete">Delete</button><button data-action="deselect">Done</button></div>
         <form class="text-editor" aria-label="Add text note"><textarea placeholder="Write a note…" aria-label="Annotation text"></textarea><footer><span>Ctrl/⌘ + Enter saves</span><button type="submit">Place note</button></footer></form>
         <div class="toast" role="status"></div>`;
       this.el = {
         surface: this.shadow.querySelector(".surface"), svg: this.shadow.querySelector(".overlay"), layer: this.shadow.querySelector(".annotation-layer"), rail: this.shadow.querySelector(".rail"),
-        context: this.shadow.querySelector(".context"), menuButton: this.shadow.querySelector("[data-action=menu]"), undoButton: this.shadow.querySelector("[data-action=undo]"), redoButton: this.shadow.querySelector("[data-action=redo]"), themeButton: this.shadow.querySelector("[data-action=theme]"), themeLabel: this.shadow.querySelector("[data-theme-label]"), shortcutsButton: this.shadow.querySelector("[data-action=shortcuts]"), shortcutsPanel: this.shadow.querySelector("#annotaura-shortcuts"), layers: this.shadow.querySelector(".layers"), actions: this.shadow.querySelector(".actions"), editor: this.shadow.querySelector(".text-editor"), textarea: this.shadow.querySelector("textarea"), toast: this.shadow.querySelector(".toast"),
+        context: this.shadow.querySelector(".context"), dragHandle: this.shadow.querySelector("[data-drag-handle]"), resizeHandle: this.shadow.querySelector("[data-resize-handle]"), menuButton: this.shadow.querySelector("[data-action=menu]"), undoButton: this.shadow.querySelector("[data-action=undo]"), redoButton: this.shadow.querySelector("[data-action=redo]"), themeButton: this.shadow.querySelector("[data-action=theme]"), themeLabel: this.shadow.querySelector("[data-theme-label]"), shortcutsButton: this.shadow.querySelector("[data-action=shortcuts]"), shortcutsPanel: this.shadow.querySelector("#annotaura-shortcuts"), layers: this.shadow.querySelector(".layers"), actions: this.shadow.querySelector(".actions"), editor: this.shadow.querySelector(".text-editor"), textarea: this.shadow.querySelector("textarea"), toast: this.shadow.querySelector(".toast"),
       };
       this.el.shortcutsPanel.insertAdjacentHTML("afterend", `<button class="keybinding-editor-toggle" data-action="keybinding-editor" aria-expanded="false" aria-controls="annotaura-keybinding-editor"><span>Customize tool keys</span><b aria-hidden="true">+</b></button><div id="annotaura-keybinding-editor" class="keybinding-editor" aria-hidden="true"></div>`);
       this.el.keybindingEditorButton = this.shadow.querySelector("[data-action=keybinding-editor]");
       this.el.keybindingEditor = this.shadow.querySelector("#annotaura-keybinding-editor");
+      this.applyPanelRect();
+    }
+
+    applyPanelRect() {
+      const rect = this.settings.panelRect;
+      if (!rect) return;
+      Object.assign(this.el.context.style, { left: `${rect.left}px`, top: `${rect.top}px`, right: "auto", width: `${rect.width}px`, height: `${rect.height}px` });
+    }
+
+    clampPanelRect(left, top, width, height) {
+      const minWidth = 200, minHeight = 160, margin = 8;
+      const clampedWidth = Math.min(Math.max(width, minWidth), window.innerWidth - margin * 2);
+      const clampedHeight = Math.min(Math.max(height, minHeight), window.innerHeight - margin * 2);
+      const clampedLeft = Math.min(Math.max(left, margin), window.innerWidth - clampedWidth - margin);
+      const clampedTop = Math.min(Math.max(top, margin), window.innerHeight - clampedHeight - margin);
+      return { left: clampedLeft, top: clampedTop, width: clampedWidth, height: clampedHeight };
+    }
+
+    bindPanelDragAndResize() {
+      this.el.dragHandle.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        const startRect = this.el.context.getBoundingClientRect();
+        const origin = { x: event.clientX, y: event.clientY, left: startRect.left, top: startRect.top, width: startRect.width, height: startRect.height };
+        this.el.context.classList.add("is-dragging");
+        this.el.dragHandle.setPointerCapture?.(event.pointerId);
+        const onMove = (moveEvent) => {
+          const next = this.clampPanelRect(origin.left + (moveEvent.clientX - origin.x), origin.top + (moveEvent.clientY - origin.y), origin.width, origin.height);
+          Object.assign(this.el.context.style, { left: `${next.left}px`, top: `${next.top}px`, right: "auto", width: `${next.width}px` });
+        };
+        const onUp = () => {
+          this.el.context.classList.remove("is-dragging");
+          this.el.dragHandle.removeEventListener("pointermove", onMove);
+          this.el.dragHandle.removeEventListener("pointerup", onUp);
+          const finalRect = this.el.context.getBoundingClientRect();
+          this.settings.panelRect = { left: finalRect.left, top: finalRect.top, width: finalRect.width, height: finalRect.height };
+          this.persistSettings();
+        };
+        this.el.dragHandle.addEventListener("pointermove", onMove);
+        this.el.dragHandle.addEventListener("pointerup", onUp, { once: true });
+      });
+
+      this.el.resizeHandle.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        const startRect = this.el.context.getBoundingClientRect();
+        const origin = { x: event.clientX, y: event.clientY, left: startRect.left, top: startRect.top, width: startRect.width, height: startRect.height };
+        this.el.context.classList.add("is-resizing");
+        this.el.resizeHandle.setPointerCapture?.(event.pointerId);
+        const onMove = (moveEvent) => {
+          const next = this.clampPanelRect(origin.left, origin.top, origin.width + (moveEvent.clientX - origin.x), origin.height + (moveEvent.clientY - origin.y));
+          Object.assign(this.el.context.style, { left: `${next.left}px`, top: `${next.top}px`, right: "auto", width: `${next.width}px`, height: `${next.height}px` });
+        };
+        const onUp = () => {
+          this.el.context.classList.remove("is-resizing");
+          this.el.resizeHandle.removeEventListener("pointermove", onMove);
+          this.el.resizeHandle.removeEventListener("pointerup", onUp);
+          const finalRect = this.el.context.getBoundingClientRect();
+          this.settings.panelRect = { left: finalRect.left, top: finalRect.top, width: finalRect.width, height: finalRect.height };
+          this.persistSettings();
+        };
+        this.el.resizeHandle.addEventListener("pointermove", onMove);
+        this.el.resizeHandle.addEventListener("pointerup", onUp, { once: true });
+      });
     }
 
     bind() {
+      this.bindPanelDragAndResize();
       this.el.rail.addEventListener("mouseenter", () => this.el.rail.classList.add("is-expanded"));
       this.el.rail.addEventListener("mouseleave", () => this.el.rail.classList.remove("is-expanded"));
       this.shadow.addEventListener("click", (event) => this.handleControlClick(event));
@@ -472,7 +543,7 @@
         if (target) {
           this.selectAnnotation(target.dataset.annId);
           const start = point(event);
-          this.dragging = { id: target.dataset.annId, start, snapshot: this.serializeLayers() };
+          this.dragging = { id: target.dataset.annId, start, snapshot: this.serializeLayers(), originGeometry: JSON.parse(JSON.stringify(target && this.findAnnotation(target.dataset.annId)?.geometry)) };
           this.el.svg.setPointerCapture?.(event.pointerId);
         } else this.deselect();
         return;
@@ -506,7 +577,7 @@
       const annotation = this.drawing.annotation;
       if (annotation.type === "path" || annotation.type === "highlight") annotation.geometry.points.push(current);
       else { annotation.geometry.x2 = current.x; annotation.geometry.y2 = current.y; }
-      this.renderAll();
+      this.patchElement(annotation);
     }
 
     pointerUp(event) {
@@ -563,12 +634,12 @@
     deselect() { this.selectedId = null; this.dragging = null; this.renderAll(); this.renderControls(); }
 
     moveSelected(current) {
-      const { id, start, snapshot } = this.dragging;
-      this.restoreLayers(snapshot, false);
+      const { id, start, originGeometry } = this.dragging;
       const annotation = this.findAnnotation(id);
-      if (!annotation) return;
+      if (!annotation || !originGeometry) return;
+      annotation.geometry = JSON.parse(JSON.stringify(originGeometry));
       this.translate(annotation, current.x - start.x, current.y - start.y);
-      this.renderAll();
+      this.patchElement(annotation);
     }
 
     translate(annotation, dx, dy) {
@@ -653,8 +724,27 @@
     }
 
     renderAll() {
-      this.el.layer.innerHTML = this.project.layers.filter((layer) => layer.visible).flatMap((layer) => layer.annotations.map((annotation) => this.svgFor(annotation))).join("");
+      this.renderLayer();
       this.renderControls();
+    }
+
+    renderLayer() {
+      this.el.layer.innerHTML = this.project.layers.filter((layer) => layer.visible).flatMap((layer) => layer.annotations.map((annotation) => this.svgFor(annotation))).join("");
+    }
+
+    patchElement(annotation) {
+      const node = this.el.layer.querySelector(`[data-ann-id="${annotation.id}"]`);
+      if (!node) { this.renderLayer(); return; }
+      const { type, geometry } = annotation;
+      if (type === "path" || type === "highlight") {
+        node.setAttribute("d", geometry.points.map((point, index) => `${index ? "L" : "M"}${point.x} ${point.y}`).join(" "));
+        return;
+      }
+      if (type === "text" || type === "stamp") { node.setAttribute("transform", `translate(${geometry.x} ${geometry.y})`); return; }
+      const x = Math.min(geometry.x1, geometry.x2), y = Math.min(geometry.y1, geometry.y2), w = Math.abs(geometry.x2 - geometry.x1), h = Math.abs(geometry.y2 - geometry.y1);
+      if (type === "rect") { node.setAttribute("x", x); node.setAttribute("y", y); node.setAttribute("width", w); node.setAttribute("height", h); return; }
+      if (type === "ellipse") { node.setAttribute("cx", x + w / 2); node.setAttribute("cy", y + h / 2); node.setAttribute("rx", w / 2); node.setAttribute("ry", h / 2); return; }
+      node.setAttribute("x1", geometry.x1); node.setAttribute("y1", geometry.y1); node.setAttribute("x2", geometry.x2); node.setAttribute("y2", geometry.y2);
     }
 
     svgFor(annotation) {
