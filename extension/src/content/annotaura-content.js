@@ -556,13 +556,12 @@
 
     beginDrawing(start, pointerId) {
       this.snapshot(true);
-      const type = this.activeTool === "highlight" ? "path" : this.activeTool;
+      const type = this.activeTool === "pen" ? "path" : this.activeTool;
       const annotation = {
         id: uid("ann"), type, createdAt: new Date().toISOString(), layerId: this.activeLayerId,
         style: { color: this.settings.color, width: this.activeTool === "highlight" ? Math.max(14, this.settings.width * 5) : this.settings.width, opacity: this.activeTool === "highlight" ? Math.min(.36, this.settings.opacity) : this.settings.opacity },
         geometry: this.activeTool === "pen" || this.activeTool === "highlight" ? { points: [start] } : { x1: start.x, y1: start.y, x2: start.x, y2: start.y },
       };
-      if (this.activeTool === "highlight") annotation.type = "highlight";
       this.activeLayer().annotations.push(annotation);
       this.drawing = { annotation, start, pointerId };
       this.el.svg.setPointerCapture?.(pointerId);
