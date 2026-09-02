@@ -69,6 +69,10 @@
     return api.storage.local.set({ [key]: value });
   }
 
+  async function storeRemove(key) {
+    try { await api.storage.local.remove(key); } catch { /* best effort */ }
+  }
+
   function escapeXml(value) {
     return String(value).replace(/[<>&"']/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;", "'": "&apos;" })[char]);
   }
@@ -90,9 +94,16 @@
     return icons[id] ?? "•";
   }
 
-  function bindingFromEvent(event) {
+  function physicalLetter(event) {
+    const physicalMatch = /^Key([A-Z])$/.exec(event.code || "");
+    if (physicalMatch) return physicalMatch[1].toLowerCase();
     const key = event.key.toLowerCase();
-    if (!/^[a-z]$/.test(key) || event.shiftKey || (event.ctrlKey && event.metaKey)) return null;
+    return /^[a-z]$/.test(key) ? key : null;
+  }
+
+  function bindingFromEvent(event) {
+    const key = physicalLetter(event);
+    if (!key || event.shiftKey || (event.ctrlKey && event.metaKey)) return null;
     if (event.ctrlKey || event.metaKey) return event.altKey ? `${event.metaKey ? "meta" : "ctrl"}+alt+${key}` : null;
     return event.altKey ? `alt+${key}` : key;
   }
@@ -115,6 +126,7 @@
       this.recordingTool = null;
       this.keybindingConflict = null;
       this.saveTimer = null;
+      this.explicitlySaved = false;
       this.refreshFrame = 0;
       this.root = document.createElement("div");
       this.root.id = ROOT_ID;
@@ -239,9 +251,14 @@
 
     onKeydown = (event) => {
       if (this.el.textarea === this.shadow.activeElement || this.el.textarea.matches(":focus")) return;
+      const pageFocus = document.activeElement;
+      if (pageFocus && pageFocus !== this.root) {
+        const tag = pageFocus.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || pageFocus.isContentEditable) return;
+      }
       if (this.recordingTool) { this.captureKeybinding(event); return; }
-      if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === "z") { event.preventDefault(); event.shiftKey ? this.redo() : this.undo(); return; }
-      if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === "y") { event.preventDefault(); this.redo(); return; }
+      if ((event.ctrlKey || event.metaKey) && !event.altKey && physicalLetter(event) === "z") { event.preventDefault(); event.shiftKey ? this.redo() : this.undo(); return; }
+      if ((event.ctrlKey || event.metaKey) && !event.altKey && physicalLetter(event) === "y") { event.preventDefault(); this.redo(); return; }
       if (event.key === "?") { event.preventDefault(); this.toggleMenu(true); this.toggleShortcuts(true); return; }
       if (event.key === "Escape") { event.preventDefault(); this.close(); return; }
       if ((event.key === "Backspace" || event.key === "Delete") && this.selectedId) { event.preventDefault(); this.deleteSelected(); return; }
@@ -525,8 +542,7 @@
       if (!text || !this.pendingTextPosition) { this.cancelText(); return; }
       this.snapshot(true);
       const selection = window.getSelection()?.toString().trim() || "";
-      this.activeLayerId = "notes";
-      this.activeLayer().annotations.push({ id: uid("note"), type: "text", createdAt: new Date().toISOString(), layerId: "notes", text, style: { color: this.settings.color, width: this.settings.width, opacity: 1 }, geometry: this.pendingTextPosition, anchor: selection ? { quote: selection.slice(0, 500), selectorHint: location.hostname } : undefined });
+      this.project.layers.find((layer) => layer.id === "notes").annotations.push({ id: uid("note"), type: "text", createdAt: new Date().toISOString(), layerId: "notes", text, style: { color: this.settings.color, width: this.settings.width, opacity: 1 }, geometry: this.pendingTextPosition, anchor: selection ? { quote: selection.slice(0, 500), selectorHint: location.hostname } : undefined });
       this.cancelText();
       this.persistSoon();
       this.renderAll();
@@ -537,7 +553,6 @@
       this.snapshot(true);
       const evidence = this.project.layers.find((layer) => layer.id === "evidence");
       const number = evidence.annotations.filter((annotation) => annotation.type === "stamp").length + 1;
-      this.activeLayerId = "evidence";
       evidence.annotations.push({ id: uid("stamp"), type: "stamp", createdAt: new Date().toISOString(), layerId: "evidence", text: String(number), style: { color: this.settings.color, width: this.settings.width, opacity: 1 }, geometry: position });
       this.persistSoon();
       this.renderAll();
@@ -675,7 +690,7 @@
       this.project.source.title = document.title || this.project.source.title;
       try {
         await storeSet(projectKey(), this.project);
-        if (manual) this.toast("Saved locally to this page project.");
+        if (manual) { this.explicitlySaved = true; this.toast("Saved locally to this page project."); }
       } catch (error) {
         this.toast("Local storage is full. Export this project or remove old projects.");
         console.warn("Annotaura storage error", error);
@@ -683,6 +698,7 @@
     }
 
     exportJson() {
+      this.explicitlySaved = true;
       this.persist(false);
       const payload = JSON.stringify({ format: "annotaura-project", version: "1.0", exportedAt: new Date().toISOString(), project: this.project }, null, 2);
       const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
@@ -697,6 +713,7 @@
     async captureVisible() {
       this.el.rail.style.visibility = "hidden";
       this.el.context.classList.remove("is-open");
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       try {
         const result = await api.runtime.sendMessage({ type: "annotaura:capture-visible" });
         if (!result?.ok) throw new Error(result?.error || "Capture unavailable");
@@ -724,6 +741,7 @@
       clearTimeout(this.saveTimer);
       this.saveTimer = null;
       if (this.refreshFrame) { cancelAnimationFrame(this.refreshFrame); this.refreshFrame = 0; }
+      if (!this.explicitlySaved) storeRemove(projectKey());
       this.project = blankProject();
       this.selectedId = null;
       this.undoStack = [];
