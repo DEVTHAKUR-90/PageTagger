@@ -1,6 +1,7 @@
 <div align="center">
+<pre>
 
-```text
+
  █████╗ ███╗   ██╗███╗   ██╗ ██████╗ ████████╗ █████╗ ██╗   ██╗██████╗  █████╗
 ██╔══██╗████╗  ██║████╗  ██║██╔═══██╗╚══██╔══╝██╔══██╗██║   ██║██╔══██╗██╔══██╗
 ███████║██╔██╗ ██║██╔██╗ ██║██║   ██║   ██║   ███████║██║   ██║██████╔╝███████║
@@ -8,8 +9,8 @@
 ██║  ██║██║ ╚████║██║ ╚████║╚██████╔╝   ██║   ██║  ██║╚██████╔╝██║  ██║██║  ██║
 ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 
-                         MARK THE EVIDENCE. KEEP THE CONTEXT.
-```
+MARK THE EVIDENCE. KEEP THE CONTEXT.
+
 
 **A local-first visual annotation workspace for the open web.**
 
@@ -17,6 +18,7 @@
 [![Repo](https://img.shields.io/badge/GitHub-PageTagger-181717?style=flat-square&logo=github)](https://github.com/DEVTHAKUR-90/PageTagger)
 
 </div>
+</pre>
 
 Annotaura adds an edge-mounted **Margin Rail** to ordinary web pages. Mark passages, draw evidence, add notes, build page-aware projects, and return to reading without covering the page with a conventional dashboard.
 
