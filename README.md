@@ -8,8 +8,8 @@
 ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 
 
-MARK THE EVIDENCE. KEEP THE CONTEXT.
 
+MARK THE EVIDENCE. KEEP THE CONTEXT.
 **A local-first visual annotation workspace for the open web.**
 </pre>
 
